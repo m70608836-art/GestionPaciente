@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control de Pacientes | Sistema Médico</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <i class="fas fa-heart-pulse me-2 fs-3 text-primary"></i>
+                <span class="brand-text">GERARDO TEPAS</span>
+            </a>
+            <div class="ms-auto d-flex align-items-center">
+                <div class="search-wrapper me-3 d-none d-md-block">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="searchInput" class="search-input" placeholder="Buscar paciente...">
+                </div>
+                <button class="btn btn-outline-warning me-2 border-warning text-warning" onclick="openStatsModal()">
+                    <i class="fas fa-chart-pie me-2"></i> Estadísticas
+                </button>
+                <button class="btn btn-outline-info me-2 border-info text-info" onclick="openReportModal()">
+                    <i class="fas fa-file-medical me-2"></i> Informe Mensual
+                </button>
+                <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#patientModal"
+                    onclick="prepareAdd()">
+                    <i class="fas fa-plus me-2"></i> Nuevo Paciente
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="glass-card p-4 fade-in">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold mb-1">Registro de Pacientes</h2>
+                    <p class="text-muted small">Gestión centralizada de expedientes y contactos</p>
+                </div>
+                <div class="d-md-none w-50">
+                    <input type="text" id="searchInputMobile" class="search-input" placeholder="Buscar...">
+                </div>
+            </div>
+
+            <div class="table-container">
+                <table class="custom-table" id="patientsTable">
+                    <thead>
+                        <tr>
+                            <th>Corr.</th>
+                            <th>Expediente</th>
+                            <th>Nombres y Apellidos</th>
+                            <th>DUI</th>
+                            <th>Fecha Ins.</th>
+                            <th>Responsable</th>
+                            <th>Celular</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientsBody">
+                        <!-- Content will be injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="noResults" class="text-center py-5 d-none">
+                <i class="fas fa-user-slash fs-1 text-muted mb-3"></i>
+                <p class="text-muted">No se encontraron pacientes registrados.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Patient Modal -->
+    <div class="modal fade" id="patientModal" tabindex="-1" aria-labelledby="patientModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="patientModalLabel">
+                        <i class="fas fa-user-plus me-2 text-primary"></i>
+                        <span id="modalTitleText">Agregar Nuevo Paciente</span>
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="patientForm">
+                        <input type="hidden" id="editIndex">
+                        <div class="row g-3">
+                            <!-- Correlativo y Expediente -->
+                            <div class="col-md-6">
+                                <label for="correlativo" class="form-label">Correlativo</label>
+                                <input type="text" class="form-control" id="correlativo" placeholder="Ej: 0001" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="expediente" class="form-label">Número de Expediente</label>
+                                <input type="text" class="form-control" id="expediente" placeholder="Ej: EXP-2024-001"
+                                    required>
+                            </div>
+
+                            <!-- Nombres y Apellidos -->
+                            <div class="col-md-6">
+                                <label for="nombres" class="form-label">Nombres</label>
+                                <input type="text" class="form-control" id="nombres" placeholder="Ej: Juan Antonio"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="apellidos" class="form-label">Apellidos</label>
+                                <input type="text" class="form-control" id="apellidos" placeholder="Ej: Pérez García"
+                                    required>
+                            </div>
+
+                            <!-- DUI y Fecha -->
+                            <div class="col-md-6">
+                                <label for="dui" class="form-label">DUI</label>
+                                <input type="text" class="form-control" id="dui" placeholder="00000000-0" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="fechaIns" class="form-label">Fecha de Inscripción</label>
+                                <input type="date" class="form-control" id="fechaIns" required>
+                            </div>
+
+                            <!-- Responsable y Celular -->
+                            <div class="col-md-6">
+                                <label for="responsable" class="form-label">Responsable</label>
+                                <input type="text" class="form-control" id="responsable"
+                                    placeholder="Nombre de un contacto">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cel" class="form-label">Celular</label>
+                                <input type="text" class="form-control" id="cel" placeholder="0000-0000" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary px-4 border-secondary text-secondary"
+                        data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" form="patientForm" class="btn btn-primary-custom px-4" id="saveBtn">Guardar
+                        Registro</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-id-card me-2 text-primary"></i>Detalles del Paciente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="viewModalBody">
+                    <!-- Injected by JS -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-custom px-4" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Report Modal -->
+    <div class="modal fade" id="reportModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-line me-2 text-primary"></i>Informe Mensual de Pacientes</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4 align-items-end">
+                        <div class="col-md-4">
+                            <label class="form-label">Seleccionar Mes y Año</label>
+                            <input type="month" id="reportMonth" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-primary-custom w-100" onclick="generateReport()">
+                                <i class="fas fa-sync me-2"></i>Generar Informe
+                            </button>
+                        </div>
+                        <div class="col-md-4 text-end">
+                            <button class="btn btn-outline-success" onclick="printReport()">
+                                <i class="fas fa-print me-2"></i>Imprimir / PDF
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="reportContent" class="p-4 rounded bg-white text-dark shadow-sm d-none" style="min-height: 400px;">
+                        <div class="text-center mb-4">
+                            <h3 class="fw-bold mb-0">GERARDO TEPAS</h3>
+                            <p class="text-muted">Reporte de Inscripciones de Pacientes</p>
+                            <hr>
+                            <h4 id="reportTitle" class="fw-bold text-primary">Mes: Mayo 2024</h4>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="card bg-light border-0 p-3 text-center">
+                                    <h6 class="text-muted text-uppercase small mb-1">Total Registros</h6>
+                                    <h2 id="reportTotal" class="fw-bold mb-0">0</h2>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table table-striped table-hover mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Corr.</th>
+                                    <th>Expediente</th>
+                                    <th>Nombre Completo</th>
+                                    <th>DUI</th>
+                                    <th>Fecha</th>
+                                    <th>Responsable</th>
+                                    <th>Celular</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reportTableBody">
+                                <!-- Injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="reportEmpty" class="text-center py-5">
+                        <i class="fas fa-calendar-times fs-1 text-muted mb-3"></i>
+                        <p class="text-muted">No hay datos para el periodo seleccionado.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Modal -->
+    <div class="modal fade" id="statsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-pie me-2 text-primary"></i>Panel de Estadísticas</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <!-- Stat Cards -->
+                        <div class="col-md-6">
+                            <div class="glass-card p-4 text-center border-primary">
+                                <h6 class="text-muted text-uppercase small">Total de Pacientes</h6>
+                                <h1 id="statsTotal" class="display-4 fw-bold text-primary mb-0">0</h1>
+                                <p class="text-muted small mt-2">Registros históricos</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="glass-card p-4 text-center border-success">
+                                <h6 class="text-muted text-uppercase small">Nuevos este Mes</h6>
+                                <h1 id="statsThisMonth" class="display-4 fw-bold text-success mb-0">0</h1>
+                                <p id="statsGrowth" class="text-muted small mt-2">Cargando...</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Mini Chart -->
+                        <div class="col-12 mt-4">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-history me-2"></i>Inscripciones Mensuales (Últimos 6 meses)</h6>
+                            <div id="statsChart" class="d-flex align-items-end justify-content-between px-3" style="height: 200px; padding-bottom: 25px;">
+                                <!-- Bars injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary-custom px-4" data-bs-dismiss="modal">Entendido</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
