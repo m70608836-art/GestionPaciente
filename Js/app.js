@@ -259,8 +259,10 @@ function prepareAdd() {
     let nextCorr = "0001";
     if (patients.length > 0) {
         const maxCorr = patients.reduce((max, p) => {
-            const num = parseInt(p.correlativo);
-            return isNaN(num) ? max : Math.max(max, num);
+            const num = parseInt(p.correlativo, 10);
+            // Ignorar números muy grandes (timestamps) o inválidos
+            if (isNaN(num) || num > 999999) return max;
+            return Math.max(max, num);
         }, 0);
         nextCorr = (maxCorr + 1).toString().padStart(4, '0');
     }
