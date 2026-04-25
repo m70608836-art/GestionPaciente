@@ -200,7 +200,7 @@ function editPatient(id) {
 
     document.getElementById('editIndex').value = patient.id;
     document.getElementById('correlativo').value = patient.correlativo;
-    document.getElementById('correlativo').disabled = true;
+    // Correlativo is always read-only now
 
     document.getElementById('expediente').value = patient.expediente;
     document.getElementById('nombres').value = patient.nombres;
@@ -245,6 +245,10 @@ async function deletePatient(id) {
 }
 
 function prepareAdd() {
+    if (patients.length === 0 && !patientsBody.innerHTML.includes('spinner-border')) {
+        // This might happen if it's the very first patient ever or if it's still loading
+    }
+
     document.getElementById('modalTitleText').innerText = 'Agregar Paciente';
     document.getElementById('saveBtn').innerText = 'Registrar';
     document.getElementById('editIndex').value = '';
@@ -252,14 +256,16 @@ function prepareAdd() {
     document.getElementById('fechaIns').valueAsDate = new Date();
 
     // Auto-incremental Correlativo logic
-    const maxCorr = patients.reduce((max, p) => {
-        const num = parseInt(p.correlativo);
-        return isNaN(num) ? max : Math.max(max, num);
-    }, 0);
-    const nextCorr = (maxCorr + 1).toString().padStart(4, '0');
+    let nextCorr = "0001";
+    if (patients.length > 0) {
+        const maxCorr = patients.reduce((max, p) => {
+            const num = parseInt(p.correlativo);
+            return isNaN(num) ? max : Math.max(max, num);
+        }, 0);
+        nextCorr = (maxCorr + 1).toString().padStart(4, '0');
+    }
 
     document.getElementById('correlativo').value = nextCorr;
-    document.getElementById('correlativo').disabled = false; // Enabled for new records
 }
 
 // Report Functions
