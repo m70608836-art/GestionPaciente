@@ -53,10 +53,7 @@
     <main class="main-container">
         <div class="glass-card p-4 fade-in">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="fw-bold mb-1">Registro de Pacientes</h2>
-                    <p class="text-muted small">Gestión centralizada de expedientes y contactos</p>
-                </div>
+
                 <div class="d-md-none w-50">
                     <input type="text" id="searchInputMobile" class="search-input" placeholder="Buscar...">
                 </div>
@@ -108,7 +105,8 @@
                             <!-- Correlativo y Expediente -->
                             <div class="col-md-6">
                                 <label for="correlativo" class="form-label">Correlativo</label>
-                                <input type="text" class="form-control" id="correlativo" placeholder="Ej: 0001" required>
+                                <input type="text" class="form-control" id="correlativo" placeholder="Ej: 0001"
+                                    required>
                             </div>
                             <div class="col-md-6">
                                 <label for="expediente" class="form-label">Número de Expediente</label>
@@ -166,7 +164,8 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-id-card me-2 text-primary"></i>Detalles del Paciente</h5>
+                    <h5 class="modal-title fw-bold"><i class="fas fa-id-card me-2 text-primary"></i>Detalles del
+                        Paciente</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="viewModalBody">
@@ -184,7 +183,8 @@
         <div class="modal-dialog modal-xl modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-line me-2 text-primary"></i>Informe Mensual de Pacientes</h5>
+                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-line me-2 text-primary"></i>Informe Mensual
+                        de Pacientes</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -204,15 +204,16 @@
                             </button>
                         </div>
                     </div>
-                    
-                    <div id="reportContent" class="p-4 rounded bg-white text-dark shadow-sm d-none" style="min-height: 400px;">
+
+                    <div id="reportContent" class="p-4 rounded bg-white text-dark shadow-sm d-none"
+                        style="min-height: 400px;">
                         <div class="text-center mb-4">
                             <h3 class="fw-bold mb-0">GERARDO TEPAS</h3>
                             <p class="text-muted">Reporte de Inscripciones de Pacientes</p>
                             <hr>
                             <h4 id="reportTitle" class="fw-bold text-primary">Mes: Mayo 2024</h4>
                         </div>
-                        
+
                         <div class="row mb-4">
                             <div class="col-md-4">
                                 <div class="card bg-light border-0 p-3 text-center">
@@ -239,7 +240,7 @@
                             </tbody>
                         </table>
                     </div>
-                    
+
                     <div id="reportEmpty" class="text-center py-5">
                         <i class="fas fa-calendar-times fs-1 text-muted mb-3"></i>
                         <p class="text-muted">No hay datos para el periodo seleccionado.</p>
@@ -254,7 +255,8 @@
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-pie me-2 text-primary"></i>Panel de Estadísticas</h5>
+                    <h5 class="modal-title fw-bold"><i class="fas fa-chart-pie me-2 text-primary"></i>Panel de
+                        Estadísticas</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
@@ -274,11 +276,13 @@
                                 <p id="statsGrowth" class="text-muted small mt-2">Cargando...</p>
                             </div>
                         </div>
-                        
+
                         <!-- Mini Chart -->
                         <div class="col-12 mt-4">
-                            <h6 class="fw-bold mb-3"><i class="fas fa-history me-2"></i>Inscripciones Mensuales (Últimos 6 meses)</h6>
-                            <div id="statsChart" class="d-flex align-items-end justify-content-between px-3" style="height: 200px; padding-bottom: 25px;">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-history me-2"></i>Inscripciones Mensuales (Últimos
+                                6 meses)</h6>
+                            <div id="statsChart" class="d-flex align-items-end justify-content-between px-3"
+                                style="height: 200px; padding-bottom: 25px;">
                                 <!-- Bars injected by JS -->
                             </div>
                         </div>
